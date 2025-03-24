@@ -35,3 +35,4 @@ runs:
     - name: Set success output
       id: success
       run: echo "success=true" >> $GITHUB_ENV
+      shell: bash
