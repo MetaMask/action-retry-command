@@ -25,7 +25,7 @@ runs:
     - name: Retry command
       run: |
         command() {
-          "$SHELL" -c "${{ inputs.command }}"
+          "$SHELL" -c "${{ inputs.run }}"
         }
 
         for i in $(seq 1 ${{ inputs.max-retries }}); do
