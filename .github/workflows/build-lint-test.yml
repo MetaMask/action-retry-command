@@ -46,8 +46,8 @@ jobs:
             exit 1
           fi
 
-  test-exit-zero:
-    name: Test exit 0
+  test-success:
+    name: Test success
     runs-on: ubuntu-latest
     needs: prepare
     strategy:
@@ -64,14 +64,14 @@ jobs:
         id: run-command
         uses: ./
         with:
-          run: exit 0
+          command: exit 0
 
       - name: Check output
         if: ${{ steps.run-command.outputs.success != 'true' }}
         run: exit 1
 
-  test-exit-one:
-    name: Test exit 1
+  test-failure:
+    name: Test failure
     runs-on: ubuntu-latest
     needs: prepare
     strategy:
@@ -89,14 +89,14 @@ jobs:
         id: run-command
         uses: ./
         with:
-          run: exit 1
+          command: exit 1
 
       - name: Check output
         if: ${{ steps.run-command.outputs.success == 'true' }}
         run: exit 1
 
   test-retry:
-    name: Test retry command
+    name: Test success after retries
     runs-on: ubuntu-latest
     needs: prepare
     strategy:
@@ -116,7 +116,7 @@ jobs:
         id: run-command
         uses: ./
         with:
-          run: |
+          command: |
             number=$(<number.txt)
             if [[ $number -lt 3 ]]; then
               echo $((number + 1)) > number.txt

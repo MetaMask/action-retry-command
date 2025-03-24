@@ -2,7 +2,7 @@ name: Retry command
 description: Retry a command up to a specified number of times.
 
 inputs:
-  run:
+  command:
     description: The command to run.
     required: true
   shell:
@@ -32,12 +32,15 @@ runs:
           if command; then
             exit 0
           fi
+
+          echo "Attempt $i failed, retrying in $((2 ** (i - 1))) seconds..."
+          sleep $((2 ** (i - 1)))
         done
         echo "::error::Command failed after ${{ inputs.max-retries }} attempts."
         exit 1
       shell: ${{ inputs.shell }}
       env:
-        COMMAND: ${{ inputs.run }}
+        COMMAND: ${{ inputs.command }}
     - name: Set success output
       id: success
       run: echo "success=true" >> "$GITHUB_OUTPUT"
