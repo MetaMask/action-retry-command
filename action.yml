@@ -25,7 +25,7 @@ runs:
     - name: Retry command
       run: |
         command() {
-          "$SHELL" -c "${{ inputs.run }}"
+          "$SHELL" -c "$COMMAND"
         }
 
         for i in $(seq 1 ${{ inputs.max-retries }}); do
@@ -36,6 +36,8 @@ runs:
         echo "::error::Command failed after ${{ inputs.max-retries }} attempts."
         exit 1
       shell: ${{ inputs.shell }}
+      env:
+        COMMAND: ${{ inputs.run }}
     - name: Set success output
       id: success
       run: echo "success=true" >> "$GITHUB_OUTPUT"
