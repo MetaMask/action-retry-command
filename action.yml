@@ -1,0 +1,29 @@
+name: Retry command
+description: Retry a command up to a specified number of times.
+
+inputs:
+  run:
+    description: The command to run.
+    required: true
+  shell:
+    description: The shell to run the command in.
+    required: false
+    default: bash
+  max-retries:
+    description: The maximum number of times to retry the command.
+    required: false
+    default: 3
+
+runs:
+  using: composite
+  steps:
+    - name: Retry command
+      run: |
+        for i in $(seq 1 ${{ inputs.max-retries }}); do
+          if $SHELL -c "${{ inputs.run }}"; then
+            exit 0
+          fi
+        done
+        echo "::error::Command failed after ${{ inputs.max-retries }} attempts."
+        exit 1
+      shell: ${{ inputs.shell }}
