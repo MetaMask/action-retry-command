@@ -61,6 +61,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Run `exit 0`
+        id: run-command
         uses: ./
         with:
           run: exit 0
