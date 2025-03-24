@@ -40,6 +40,8 @@ runs:
         exit 1
       shell: ${{ inputs.shell }}
       env:
+        # The command is provided as environment variables to avoid issues with
+        # multi-line commands.
         COMMAND: ${{ inputs.command }}
     - name: Set success output
       id: success
