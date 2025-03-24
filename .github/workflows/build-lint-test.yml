@@ -47,12 +47,12 @@ jobs:
           fi
 
   test-exit-zero:
-    name: Test successful command
+    name: Test exit 0
     runs-on: ubuntu-latest
     needs: prepare
     strategy:
       matrix:
-        node-version: [ 22.x ]
+        node-version: [22.x]
     steps:
       - name: Checkout and setup environment
         uses: MetaMask/action-checkout-and-setup@v1
@@ -60,7 +60,11 @@ jobs:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
 
-      - name: Run command
+      - name: Run `exit 0`
         uses: ./
         with:
           run: exit 0
+
+      - name: Check output
+        if: ${{ steps.run-command.outputs.success != 'true' }}
+        run: exit 1

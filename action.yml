@@ -14,6 +14,11 @@ inputs:
     required: false
     default: 3
 
+outputs:
+  success:
+    description: Whether the command succeeded.
+    value: ${{ steps.success.outputs.success }}
+
 runs:
   using: composite
   steps:
@@ -27,3 +32,6 @@ runs:
         echo "::error::Command failed after ${{ inputs.max-retries }} attempts."
         exit 1
       shell: ${{ inputs.shell }}
+    - name: Set success output
+      id: success
+      run: echo "success=true" >> $GITHUB_ENV
