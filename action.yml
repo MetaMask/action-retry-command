@@ -34,5 +34,5 @@ runs:
       shell: ${{ inputs.shell }}
     - name: Set success output
       id: success
-      run: echo "success=true" >> $GITHUB_OUTPUT
+      run: echo "success=true" >> "$GITHUB_OUTPUT"
       shell: bash
