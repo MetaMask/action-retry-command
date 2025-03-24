@@ -24,8 +24,12 @@ runs:
   steps:
     - name: Retry command
       run: |
+        command() {
+          "$SHELL" -c "${{ inputs.command }}"
+        }
+
         for i in $(seq 1 ${{ inputs.max-retries }}); do
-          if $SHELL -c "${{ inputs.run }}"; then
+          if command; then
             exit 0
           fi
         done

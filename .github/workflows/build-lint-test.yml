@@ -74,6 +74,7 @@ jobs:
     name: Test exit 1
     runs-on: ubuntu-latest
     needs: prepare
+    continue-on-error: true
     strategy:
       matrix:
         node-version: [22.x]
