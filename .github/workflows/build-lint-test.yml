@@ -1,0 +1,130 @@
+name: Build, Lint, and Test
+
+on:
+  workflow_call:
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout and setup environment
+        uses: MetaMask/action-checkout-and-setup@v1
+        with:
+          is-high-risk-environment: false
+          cache-node-modules: true
+          node-version: ${{ matrix.node-version }}
+
+  lint:
+    name: Lint
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout and setup environment
+        uses: MetaMask/action-checkout-and-setup@v1
+        with:
+          is-high-risk-environment: false
+          node-version: ${{ matrix.node-version }}
+      - run: yarn lint
+      - name: Validate RC changelog
+        if: ${{ startsWith(github.head_ref, 'release/') }}
+        run: yarn lint:changelog --rc
+      - name: Validate changelog
+        if: ${{ !startsWith(github.head_ref, 'release/') }}
+        run: yarn lint:changelog
+      - name: Require clean working directory
+        shell: bash
+        run: |
+          if ! git diff --exit-code; then
+            echo "Working tree dirty at end of job"
+            exit 1
+          fi
+
+  test-success:
+    name: Test success
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout and setup environment
+        uses: MetaMask/action-checkout-and-setup@v1
+        with:
+          is-high-risk-environment: false
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run `exit 0`
+        id: run-command
+        uses: ./
+        with:
+          command: exit 0
+
+      - name: Check output
+        if: ${{ steps.run-command.outputs.success != 'true' }}
+        run: exit 1
+
+  test-failure:
+    name: Test failure
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout and setup environment
+        uses: MetaMask/action-checkout-and-setup@v1
+        with:
+          is-high-risk-environment: false
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run `exit 1`
+        continue-on-error: true
+        id: run-command
+        uses: ./
+        with:
+          command: exit 1
+
+      - name: Check output
+        if: ${{ steps.run-command.outputs.success == 'true' }}
+        run: exit 1
+
+  test-retry:
+    name: Test success after retries
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - name: Checkout and setup environment
+        uses: MetaMask/action-checkout-and-setup@v1
+        with:
+          is-high-risk-environment: false
+          node-version: ${{ matrix.node-version }}
+
+      - name: Write number to file
+        run: echo 0 > number.txt
+
+      - name: Retry command
+        id: run-command
+        uses: ./
+        with:
+          command: |
+            number=$(<number.txt)
+            if [[ $number -lt 3 ]]; then
+              echo $((number + 1)) > number.txt
+              exit 1
+            fi
+            exit 0
+          max-retries: 5
+
+      - name: Check output
+        if: ${{ steps.run-command.outputs.success != 'true' }}
+        run: exit 1
