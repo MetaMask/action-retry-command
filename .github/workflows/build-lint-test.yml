@@ -12,7 +12,7 @@ jobs:
         node-version: [22.x]
     steps:
       - name: Checkout and setup environment
-        uses: MetaMask/action-checkout-and-setup@v1
+        uses: MetaMask/action-checkout-and-setup@v2
         with:
           is-high-risk-environment: false
           cache-node-modules: true
@@ -27,7 +27,7 @@ jobs:
         node-version: [22.x]
     steps:
       - name: Checkout and setup environment
-        uses: MetaMask/action-checkout-and-setup@v1
+        uses: MetaMask/action-checkout-and-setup@v2
         with:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
@@ -55,7 +55,7 @@ jobs:
         node-version: [22.x]
     steps:
       - name: Checkout and setup environment
-        uses: MetaMask/action-checkout-and-setup@v1
+        uses: MetaMask/action-checkout-and-setup@v2
         with:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
@@ -79,7 +79,7 @@ jobs:
         node-version: [22.x]
     steps:
       - name: Checkout and setup environment
-        uses: MetaMask/action-checkout-and-setup@v1
+        uses: MetaMask/action-checkout-and-setup@v2
         with:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
@@ -104,7 +104,7 @@ jobs:
         node-version: [22.x]
     steps:
       - name: Checkout and setup environment
-        uses: MetaMask/action-checkout-and-setup@v1
+        uses: MetaMask/action-checkout-and-setup@v2
         with:
           is-high-risk-environment: false
           node-version: ${{ matrix.node-version }}
