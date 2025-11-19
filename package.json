@@ -1,6 +1,6 @@
 {
   "name": "@metamask/action-retry-command",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "A GitHub Action to retry a command up to a specified number of times",
   "homepage": "https://github.com/MetaMask/action-retry-command#readme",
